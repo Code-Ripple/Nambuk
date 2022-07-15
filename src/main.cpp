@@ -1,33 +1,44 @@
-#include "raylib.h"
+#include <raylib.h>
+#include <string>
+#include "dice.hpp"
 
-constexpr auto SCREEN_WIDTH  = 800;
-constexpr auto SCREEN_HEIGHT = 450;
+using std::string;
 
-int main()
+const int SCREEN_WIDTH  = 1280;
+const int SCREEN_HEIGHT = 720;
+
+dice mainDice;
+
+int main(void)
 {
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Window title");
     SetTargetFPS(60);
+    Texture2D background = LoadTexture(ASSETS_PATH"Background.png");
 
-    Texture2D texture = LoadTexture(ASSETS_PATH"test.png");
+    DrawTexture(background, 0, 0, WHITE);
+
 
     while (!WindowShouldClose())
     {
+
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
+        const char* text = "Communism";
 
-        const int texture_x = SCREEN_WIDTH / 2 - texture.width / 2;
-        const int texture_y = SCREEN_HEIGHT / 2 - texture.height / 2;
-        DrawTexture(texture, texture_x, texture_y, WHITE);
 
-        const char* text = "OMG! IT WORKS!";
         const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
-        DrawText(text, SCREEN_WIDTH / 2 - text_size.x / 2, texture_y + texture.height + text_size.y + 10, 20, BLACK);
+        DrawText(text, SCREEN_WIDTH / 2 - text_size.x / 2, SCREEN_HEIGHT / 2, 20, BLACK);
 
+        if(IsMouseButtonPressed(0))
+        {
+            mainDice.roll();
+        }
         EndDrawing();
     }
 
-    UnloadTexture(texture);
+
 
     CloseWindow();
     return 0;
