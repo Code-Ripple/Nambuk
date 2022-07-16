@@ -14,6 +14,7 @@ public:
     bool unitSelected();
     void setSelected(bool newValue);
     void Update();
+    void actionOfMoving(button location);
 private:
     string side;
     bool selected;

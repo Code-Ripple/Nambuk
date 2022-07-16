@@ -101,6 +101,8 @@ void SetupButtons()
     buttons[15].setPosX((SCREEN_WIDTH/2)+100);
     buttons[15].setPosY((SCREEN_HEIGHT/2)-180);
 
+
+
     units[0].setPosX(buttons[0].getPosX());
     units[0].setPosY(buttons[0].getPosY()-10);
     units[1].setPosX(buttons[1].getPosX());
@@ -110,6 +112,23 @@ void SetupButtons()
     units[3].setPosX(buttons[9].getPosX());
     units[3].setPosY(buttons[9].getPosY()-10);
 
+    buttons[0].setProvinceNumber(1);
+    buttons[1].setProvinceNumber(2);
+    buttons[2].setProvinceNumber(3);
+    buttons[3].setProvinceNumber(4);
+    buttons[4].setProvinceNumber(5);
+    buttons[5].setProvinceNumber(6);
+    buttons[6].setProvinceNumber(7);
+    buttons[7].setProvinceNumber(8);
+    buttons[8].setProvinceNumber(9);
+    buttons[9].setProvinceNumber(10);
+    buttons[10].setProvinceNumber(11);
+    buttons[11].setProvinceNumber(12);
+    buttons[12].setProvinceNumber(13);
+    buttons[13].setProvinceNumber(14);
+    buttons[14].setProvinceNumber(15);
+    buttons[15].setProvinceNumber(16);
+
 
 }
 
@@ -117,9 +136,32 @@ void Update()
 {
     for(int i = 0; i < 16; i++)
     {
+        std::cout << buttons[i].getProvinceNumber();
+    }
+    std::cout << std::endl;
+
+    for(int i = 0; i < 4; i++)
+    {
+        for(int j = 0; j < 16; j++)
+        {
+            if(units[i].getPosX() == buttons[7].getPosX())
+            {
+                //std::cout << "DDD" << std::endl; //this was just testing
+            }
+
+            if(units[i].getPosX() == buttons[j].getPosX())
+            {
+                units[i].setProvinceNumber(buttons[j].getProvinceNumber());
+            }
+        }
+    }
+
+
+    for(int i = 0; i < 16; i++)
+    {
         for(int j = 0; j < 4; j++)
         {
-            if(units[j].getPosX() == buttons[i].getPosX())
+            if(units[j].getPosX() == buttons[i].getPosX() && units[j].getPosY() == buttons[i].getPosY()+10)
             {
                 buttons[i].setColourValue(units[j].getSide());
             }
@@ -142,6 +184,19 @@ void Update()
 
     std::cout << std::endl;
 
+
+        /*for(int l = 0; l < 4; l++)
+        {
+            for(int ii = 0; ii < 16; ii++) {
+                if (buttons[ii].pressedButton() && !units[l].unitSelected()) {
+                    buttons[ii].setPressed(false);
+                }
+            }
+        }*/
+
+
+
+
     for(int i = 0; i < 4; i++)
     {
         units[i].Update();
@@ -159,6 +214,13 @@ void Update()
 
                 }
 
+                else
+                {
+                    //units[i].setSelected(false);
+                    buttons[j].setPressed(false);
+                }
+
+
 
 
             }
@@ -175,7 +237,11 @@ void Update()
 
 int main()
 {
+
+
     SetupButtons();
+
+
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Nambuk");
     SetTargetFPS(60);

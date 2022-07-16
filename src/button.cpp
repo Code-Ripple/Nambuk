@@ -49,7 +49,7 @@ void button::Update()
 
     if(IsMouseButtonPressed(0))
     {
-       if(GetMouseX() >= rect.x - 6 && GetMouseX() <= rect.x + 6 && GetMouseY() >= rect.y - 6 && GetMouseY() <= rect.y + 6)
+       if(GetMouseX() >= rect.x - 7 && GetMouseX() <= rect.x + 7 && GetMouseY() >= rect.y - 7 && GetMouseY() <= rect.y + 7)
        {
            press();
        }
