@@ -2,6 +2,8 @@
 #include "raylib.h"
 #include "string"
 
+
+
 class button
 {
 public:
@@ -14,9 +16,21 @@ public:
     void setColour(Color newColour);
     Color getColour();
     void Update();
-
+    bool getInteractible();
+    void setInteractible(bool value);
+    bool pressedButton();
+    void setPressed(bool newValue);
+    std::string getColorValue();
+    void setColourValue(std::string newValue);
+    int getProvinceNumber();
+    void setProvinceNumber(int newProvinceNumber);
 private:
     Rectangle rect;
     Color colour;
+    bool isInteractible;
+    bool hasPressedButton;
+    std::string colourValue;
+    int provinceNumber;
+
 };
 
