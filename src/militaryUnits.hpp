@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "button.hpp"
 #include "string"
+#include "dice.hpp"
 
 using std::string;
 
@@ -15,6 +16,7 @@ public:
     void setSelected(bool newValue);
     void Update();
     void actionOfMoving(button location);
+    bool battle(militaryUnit otherUnit, dice Dice);
 private:
     string side;
     bool selected;

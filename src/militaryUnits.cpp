@@ -66,6 +66,10 @@ void militaryUnit::actionOfMoving(button location) {
 }
 
 void militaryUnit::moveUnit(button location) {
+    if(location.getProvinceNumber() == getProvinceNumber())
+    {
+
+    }
     if(getProvinceNumber() == 1)
     {
         if(location.getProvinceNumber() == 2 || location.getProvinceNumber() == 3 || location.getProvinceNumber() == 4 || location.getProvinceNumber() == 9 || location.getProvinceNumber() == 10)
@@ -315,6 +319,57 @@ void militaryUnit::moveUnit(button location) {
             location.setPressed(false);
             std::cout << location.getColorValue();
             selected = false;
+        }
+    }
+    if(getProvinceNumber() == 6)
+    {
+        if(location.getProvinceNumber() == 3 || location.getProvinceNumber() == 7 || location.getProvinceNumber() == 8 || location.getProvinceNumber() == 4)
+        {
+
+            std::cout << location.getColorValue() << std::endl;
+            setPosX(location.getPosX());
+            setPosY(location.getPosY() + 10);
+
+
+            std::cout << "side: " << side << std::endl;
+            /*if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "BLUE") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(BLUE);
+            }
+
+            if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "RED") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(RED);
+            }*/
+
+            if(location.getColorValue() == "BLUE" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "RED" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            if(location.getColorValue() == "RED" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "BLUE" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            location.setPressed(false);
+            std::cout << location.getColorValue();
+            selected = false;
+
         }
     }
 
@@ -570,7 +625,7 @@ void militaryUnit::moveUnit(button location) {
             }
 
             location.setPressed(false);
-            std::cout << location.getColorValue();
+
             selected = false;
         }
     }
@@ -894,13 +949,29 @@ void militaryUnit::setSelected(bool newValue) {
 }
 
 void militaryUnit::Update() {
-    std::cout << getProvinceNumber() << std::endl;
+
 
     if(IsMouseButtonPressed(0))
     {
-        if(GetMouseX() >= getPosX() - 7 && GetMouseX() <= getPosX() + 7 && GetMouseY() >= getPosY() - 7 && GetMouseY() <= getPosY() + 7)
+        if(GetMouseX() >= getPosX() - 10&& GetMouseX() <= getPosX() + 10&& GetMouseY() >= getPosY() - 10&& GetMouseY() <= getPosY() + 10)
         {
             setSelected(true);
         }
+    }
+}
+
+bool militaryUnit::battle(militaryUnit otherUnit, dice Dice) {
+    Dice.roll();
+
+    if(Dice.getDiceValue() == 1 || Dice.getDiceValue() == 6)
+    {
+        std::cout << Dice.getDiceValue() << " Battle won for " << side << std::endl;
+        return true;
+    }
+
+    else
+    {
+        std::cout << Dice.getDiceValue() << " Battle lost for " << side << std::endl;
+        return false;
     }
 }

@@ -15,6 +15,8 @@ using std::string;
 const int SCREEN_WIDTH  = 1280;
 const int SCREEN_HEIGHT = 720;
 
+
+
 dice mainDice;
 
 bool turn; //False is south korea (0). True is north korea (1)
@@ -22,9 +24,18 @@ bool turn; //False is south korea (0). True is north korea (1)
 button buttons[20];
 militaryUnit units[4];
 
+string text1 = "DDDDD";
+
+char redTurnText[] = "North Korea's Turn";
+char blueTurnText[] = "South Korea's Turn";
+char turnText[] = "_____ Korea's Turn";
+
 void nextTurn()
 {
-    turn = !turn;
+    if(turn)
+        turn = 0;
+    if(!turn)
+        turn = 1;
 }
 
 void SetupButtons()
@@ -134,20 +145,31 @@ void SetupButtons()
 
 void Update()
 {
-    for(int i = 0; i < 16; i++)
+    //std::cout << mainDice.getDiceValue() << std::endl;
+
+    if(turn)
     {
-        std::cout << buttons[i].getProvinceNumber();
+        for(int i = 0; i < 19; i++)
+        {
+            turnText[i] = redTurnText[i];
+        }
     }
-    std::cout << std::endl;
+
+    else
+    {
+        for(int i = 0; i < 19; i++)
+        {
+            turnText[i] = blueTurnText[i];
+        }
+    }
+
+
+
 
     for(int i = 0; i < 4; i++)
     {
         for(int j = 0; j < 16; j++)
         {
-            if(units[i].getPosX() == buttons[7].getPosX())
-            {
-                //std::cout << "DDD" << std::endl; //this was just testing
-            }
 
             if(units[i].getPosX() == buttons[j].getPosX())
             {
@@ -182,7 +204,7 @@ void Update()
 
 
 
-    std::cout << std::endl;
+
 
 
         /*for(int l = 0; l < 4; l++)
@@ -204,13 +226,140 @@ void Update()
 
         if(units[i].unitSelected() == 1)
         {
+            int curPosX = units[i].getPosX(), curPosY = units[i].getPosY();
+
             for(int j = 0; j < 16; j++)
             {
                 if(buttons[j].pressedButton())
                 {
-                        units[i].moveUnit(buttons[j]);
+
+
+                    if(units[i].getSide() == "RED" && turn == 1 && buttons[j].getPosX() != units[i].getPosX())
+                    {
+                        for(int l = 0; l < 4; l++)
+                        {
+                            if(buttons[j].getPosX() == units[l].getPosX() )
+                            {
+                                mainDice.roll();
+
+                                if(mainDice.getDiceValue() == 1 || mainDice.getDiceValue() == 6)
+                                {
+                                    std::cout << mainDice.getDiceValue();
+                                    units[i].moveUnit(buttons[j]);
+                                    units[i].setSelected(false);
+                                    buttons[j].setPressed(false);
+
+                                    if(buttons[7].getColorValue() == "BLUE")
+                                    {
+                                        units[l].setPosX(buttons[7].getPosX());
+                                        units[l].setPosY(buttons[7].getPosY()+10);
+                                    }
+
+                                    turn = false;
+
+                                    break;
+                                }
+
+                                if(mainDice.getDiceValue() != 6 || mainDice.getDiceValue() != 1)
+                                {
+                                    std::cout << "LOST";
+                                    units[i].setPosX(curPosX);
+                                    units[i].setPosY(curPosY);
+                                    turn = false;
+                                    units[i].setSelected(false);
+                                    buttons[j].setPressed(false);
+
+                                }
+
+
+
+                                /*if(units[i].battle(units[l], mainDice))
+                                {
+                                    std::cout << mainDice.getDiceValue();
+                                    units[i].moveUnit(buttons[j]);
+                                    units[i].setSelected(false);
+                                    buttons[j].setPressed(false);
+                                    turn = false;
+                                }*/
+                            }
+                        }
+
+                        if(turn)
+                        {
+                            units[i].moveUnit(buttons[j]);
+                            units[i].setSelected(false);
+                            buttons[j].setPressed(false);
+                            turn = false;
+                        }
+
+
+                    }
+
+                    if(units[i].getSide() == "BLUE" && turn == 0 && buttons[j].getPosX() != units[i].getPosX())
+                    {
+                        for(int l = 0; l < 4; l++)
+                        {
+                            if(buttons[j].getPosX() == units[l].getPosX() )
+                            {
+                                mainDice.roll();
+
+                                if(mainDice.getDiceValue() == 1 || mainDice.getDiceValue() == 6)
+                                {
+                                    std::cout << mainDice.getDiceValue();
+                                    units[i].moveUnit(buttons[j]);
+                                    units[i].setSelected(false);
+                                    buttons[j].setPressed(false);
+                                    turn = true;
+
+                                    if(buttons[15].getColorValue() == "RED")
+                                    {
+                                        units[l].setPosX(buttons[15].getPosX());
+                                        units[l].setPosY(buttons[15].getPosY()+10);
+                                    }
+
+                                }
+
+                                if(mainDice.getDiceValue() != 6 || mainDice.getDiceValue() != 1)
+                                {
+                                    std::cout << "LOST";
+                                    units[i].setPosX(curPosX);
+                                    units[i].setPosY(curPosY);
+                                    turn = true;
+                                    units[i].setSelected(false);
+                                    buttons[j].setPressed(false);
+
+                                }
+
+                                /*if(units[i].battle(units[l], mainDice))
+                                {
+                                    std::cout << mainDice.getDiceValue();
+                                    units[i].moveUnit(buttons[j]);
+                                    units[i].setSelected(false);
+                                    buttons[j].setPressed(false);
+                                    turn = true;
+                                }*/
+                            }
+                        }
+
+                        if(!turn)
+                        {
+                            units[i].moveUnit(buttons[j]);
+                            units[i].setSelected(false);
+                            buttons[j].setPressed(false);
+                            turn = true;
+                        }
+
+                    }
+
+
+
+                    else
+                    {
                         units[i].setSelected(false);
                         buttons[j].setPressed(false);
+                    }
+
+
 
                 }
 
@@ -229,7 +378,7 @@ void Update()
 
     }
 
-    std::cout << std::endl;
+
 
 
 
@@ -237,7 +386,6 @@ void Update()
 
 int main()
 {
-
 
     SetupButtons();
 
@@ -247,8 +395,12 @@ int main()
     SetTargetFPS(60);
     Texture2D background = LoadTexture("D:/CPP Projects/Nambuk/assets/background.png");
     Texture2D map = LoadTexture("D:/CPP Projects/Nambuk/assets/Map.png");
-
-
+    Texture2D dice[6] = {LoadTexture("D:/CPP Projects/Nambuk/assets/Dice1.png"),
+                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice2.png"),
+                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice3.png"),
+                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice4.png"),
+                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice5.png"),
+                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice6.png")};
 
 
     while (!WindowShouldClose())
@@ -257,14 +409,12 @@ int main()
 
         DrawTexture(background, 0, 0, WHITE);
         DrawTexture(map, (SCREEN_WIDTH/2)-(312/2), (SCREEN_HEIGHT/2)-(495/2), WHITE);
+        DrawTexture(dice[mainDice.getDiceValue()-1], 50, 580, WHITE);
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
+        DrawText(turnText, (SCREEN_WIDTH/2)-220, 50, 50, BLACK);
 
-        if(IsMouseButtonPressed(0))
-        {
-            mainDice.roll();
-        }
 
         //Drawing buttons
         for(int i = 0; i < 16; i++)
