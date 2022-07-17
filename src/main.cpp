@@ -57,7 +57,7 @@ void SetupButtons()
 
     for(int i = 0; i < 4; i++)
     {
-        buttons[i].setInteractible(false);
+        buttons[i].setInteractible(true);
         units[i].setInteractible(true);
 
 
@@ -195,7 +195,7 @@ void Update()
 
        if(buttons[i].getColorValue() == "RED")
             buttons[i].setColour(RED);
-        if(buttons[i].getColorValue() == "BLUE)")
+       if(buttons[i].getColorValue() == "BLUE)")
             buttons[i].setColour(BLUE);
 
 
@@ -248,20 +248,51 @@ void Update()
                                     units[i].moveUnit(buttons[j]);
                                     units[i].setSelected(false);
                                     buttons[j].setPressed(false);
+                                    turn = false;
 
-                                    if(buttons[7].getColorValue() == "BLUE")
+                                    if(units[l].getPosX() == buttons[0].getPosX())
                                     {
-                                        units[l].setPosX(buttons[7].getPosX());
-                                        units[l].setPosY(buttons[7].getPosY()+10);
+                                        if(buttons[1].getColorValue() == "RED" && buttons[8].getColorValue() == "RED" && buttons[9].getColorValue() == "RED", buttons[2].getColorValue() == "RED" && buttons[3].getColorValue() == "RED")
+                                        {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                        }
                                     }
 
-                                    turn = false;
+                                    if(units[l].getPosX() == buttons[1].getPosX())
+                                    {
+                                        if(buttons[0].getColorValue() == "RED" && buttons[3].getColorValue() == "RED" && buttons[4].getColorValue() == "RED" && buttons[9].getColorValue() == "RED" && buttons[8].getColorValue() == "RED")
+                                        {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                        }
+                                    }
+
+                                    /*else if(buttons[7].getColorValue() == "BLUE")
+                                    {
+
+
+                                        units[l].setPosX(buttons[7].getPosX());
+                                        units[l].setPosY(buttons[7].getPosY()+10);
+
+                                    }*/
+
+
+
+
+
+
+
 
                                     break;
                                 }
 
                                 if(mainDice.getDiceValue() != 6 || mainDice.getDiceValue() != 1)
                                 {
+
+
                                     std::cout << "LOST";
                                     units[i].setPosX(curPosX);
                                     units[i].setPosY(curPosY);
