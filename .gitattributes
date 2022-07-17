@@ -7,3 +7,4 @@
 *.raw binary
 *.obj binary
 *.gltf binary
+*.c linguist-detectable=false
