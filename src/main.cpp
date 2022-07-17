@@ -15,11 +15,12 @@ using std::string;
 const int SCREEN_WIDTH  = 1280;
 const int SCREEN_HEIGHT = 720;
 
-
+bool southWon = false;
+bool northWon = false;
 
 dice mainDice;
 
-bool turn; //False is south korea (0). True is north korea (1)
+bool turn; //False is south korea (0). True is north korea (1). Definitely not political in any way
 
 button buttons[20];
 militaryUnit units[4];
@@ -143,48 +144,75 @@ void SetupButtons()
 
 }
 
-void Update()
-{
-    //std::cout << mainDice.getDiceValue() << std::endl;
+void Update() {
+    int blueCounter = 0, redCounter = 0;
 
-    if(turn)
-    {
-        for(int i = 0; i < 19; i++)
-        {
-            turnText[i] = redTurnText[i];
+    for (int i = 0; i < 16; i++) {
+        if (buttons[i].getColorValue() == "RED") {
+            redCounter++;
+        }
+
+        if (buttons[i].getColorValue() == "BLUE") {
+            blueCounter++;
         }
     }
 
-    else
-    {
-        for(int i = 0; i < 19; i++)
-        {
+    if (redCounter == 16) {
+        northWon = true;
+    }
+
+    if (blueCounter == 16) {
+        southWon = true;
+    }
+
+    int numberActiveBlue = 2, numberActiveRed = 2;
+
+    //std::cout << mainDice.getDiceValue() << std::endl;
+
+    if (turn) {
+        for (int i = 0; i < 19; i++) {
+            turnText[i] = redTurnText[i];
+        }
+    } else {
+        for (int i = 0; i < 19; i++) {
             turnText[i] = blueTurnText[i];
         }
     }
 
+    if (numberActiveRed <= 0) {
+        turn = false;
+    }
 
 
+    if (numberActiveBlue <= 0) {
+        turn = true;
+    }
 
-    for(int i = 0; i < 4; i++)
-    {
-        for(int j = 0; j < 16; j++)
-        {
 
-            if(units[i].getPosX() == buttons[j].getPosX())
-            {
+    for (int i = 0; i < 4; i++) {
+        if (!units[i].getInteractible()) {
+            if (units[i].getSide() == "RED") {
+                numberActiveRed -= 1;
+            }
+
+            if (units[i].getSide() == "BLUE") {
+                numberActiveBlue -= 1;
+            }
+
+        }
+
+        for (int j = 0; j < 16; j++) {
+
+            if (units[i].getPosX() == buttons[j].getPosX()) {
                 units[i].setProvinceNumber(buttons[j].getProvinceNumber());
             }
         }
     }
 
 
-    for(int i = 0; i < 16; i++)
-    {
-        for(int j = 0; j < 4; j++)
-        {
-            if(units[j].getPosX() == buttons[i].getPosX() && units[j].getPosY() == buttons[i].getPosY()+10)
-            {
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (units[j].getPosX() == buttons[i].getPosX() && units[j].getPosY() == buttons[i].getPosY() + 10) {
                 buttons[i].setColourValue(units[j].getSide());
             }
         }
@@ -193,11 +221,10 @@ void Update()
 
         //std::cout << "Button selected: " << buttons[i].pressedButton() << std::endl;
 
-       if(buttons[i].getColorValue() == "RED")
+        if (buttons[i].getColorValue() == "RED")
             buttons[i].setColour(RED);
-       if(buttons[i].getColorValue() == "BLUE)")
+        if (buttons[i].getColorValue() == "BLUE)")
             buttons[i].setColour(BLUE);
-
 
 
     }
@@ -207,68 +234,382 @@ void Update()
 
 
 
-        /*for(int l = 0; l < 4; l++)
-        {
-            for(int ii = 0; ii < 16; ii++) {
-                if (buttons[ii].pressedButton() && !units[l].unitSelected()) {
-                    buttons[ii].setPressed(false);
-                }
-            }
-        }*/
-
-
-
-
-    for(int i = 0; i < 4; i++)
+    /*for(int l = 0; l < 4; l++)
     {
+        for(int ii = 0; ii < 16; ii++) {
+            if (buttons[ii].pressedButton() && !units[l].unitSelected()) {
+                buttons[ii].setPressed(false);
+            }
+        }
+    }*/
+
+
+
+
+    for (int i = 0; i < 4; i++) {
         units[i].Update();
         //std::cout << "Unit selected: " << units[i].unitSelected() << std::endl;
 
-        if(units[i].unitSelected() == 1)
-        {
-            int curPosX = units[i].getPosX(), curPosY = units[i].getPosY();
-
-            for(int j = 0; j < 16; j++)
-            {
-                if(buttons[j].pressedButton())
-                {
+        if (units[i].unitSelected() == 1) {
 
 
-                    if(units[i].getSide() == "RED" && turn == 1 && buttons[j].getPosX() != units[i].getPosX())
-                    {
-                        for(int l = 0; l < 4; l++)
-                        {
-                            if(buttons[j].getPosX() == units[l].getPosX() )
-                            {
+            for (int j = 0; j < 16; j++) {
+                if (buttons[j].pressedButton()) {
+
+
+                    if (units[i].getSide() == "RED" && turn == 1 && buttons[j].getPosX() != units[i].getPosX()) {
+                        int curPosX = units[i].getPosX(), curPosY = units[i].getPosY();
+                        for (int l = 0; l < 4; l++) {
+                            int curPosXl = units[l].getPosX(), curPosYl = units[l].getPosY();
+
+                            if (buttons[j].getPosX() == units[l].getPosX()) {
                                 mainDice.roll();
 
-                                if(mainDice.getDiceValue() == 1 || mainDice.getDiceValue() == 6)
-                                {
+                                if (mainDice.getDiceValue() == 1 || mainDice.getDiceValue() == 6) {
                                     std::cout << mainDice.getDiceValue();
                                     units[i].moveUnit(buttons[j]);
                                     units[i].setSelected(false);
                                     buttons[j].setPressed(false);
-                                    turn = false;
 
-                                    if(units[l].getPosX() == buttons[0].getPosX())
-                                    {
-                                        if(buttons[1].getColorValue() == "RED" && buttons[8].getColorValue() == "RED" && buttons[9].getColorValue() == "RED", buttons[2].getColorValue() == "RED" && buttons[3].getColorValue() == "RED")
+                                    if (numberActiveBlue >= 0)
+                                        turn = false;
+
+                                    if (units[l].getPosX() == buttons[0].getPosX()) {
+                                        if (buttons[1].getColorValue() == "RED" && buttons[8].getColorValue() == "RED" && buttons[9].getColorValue() == "RED" && buttons[2].getColorValue() == "RED" && buttons[3].getColorValue() == "RED") {
+                                                std::cout << "DDD" << buttons[1].getColorValue();
+                                                units[l].setInteractible(false);
+                                                units[l].setPosX(43432);
+                                                units[l].setPosY(32323);
+                                                numberActiveBlue -= 1;
+                                            }
+                                        else {
+
+
+                                                units[l].setPosX(buttons[7].getPosX());
+                                                units[l].setPosY(buttons[7].getPosY() + 10);
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[1].getPosX()) {
+                                        if (buttons[0].getColorValue() == "RED" &&
+                                            buttons[3].getColorValue() == "RED" &&
+                                            buttons[4].getColorValue() == "RED" &&
+                                            buttons[9].getColorValue() == "RED" &&
+                                            buttons[8].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+
+
+                                    }
+
+                                    if (units[l].getPosX() == buttons[2].getPosX()) {
+                                        if (buttons[0].getColorValue() == "RED" &&
+                                            buttons[3].getColorValue() == "RED" &&
+                                            buttons[5].getColorValue() == "RED")
                                         {
                                             units[l].setInteractible(false);
                                             units[l].setPosX(43432);
                                             units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        }
+                                        else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
                                         }
                                     }
 
-                                    if(units[l].getPosX() == buttons[1].getPosX())
-                                    {
-                                        if(buttons[0].getColorValue() == "RED" && buttons[3].getColorValue() == "RED" && buttons[4].getColorValue() == "RED" && buttons[9].getColorValue() == "RED" && buttons[8].getColorValue() == "RED")
+                                    if (units[l].getPosX() == buttons[3].getPosX()) {
+                                        if (buttons[0].getColorValue() == "RED" &&
+                                            buttons[1].getColorValue() == "RED" &&
+                                            buttons[2].getColorValue() == "RED" &&
+                                            buttons[4].getColorValue() == "RED" &&
+                                            buttons[5].getColorValue() == "RED")
                                         {
                                             units[l].setInteractible(false);
                                             units[l].setPosX(43432);
                                             units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        }
+                                        else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
                                         }
                                     }
+
+                                    if (units[l].getPosX() == buttons[4].getPosX()) {
+                                        if (buttons[1].getColorValue() == "RED" &&
+                                            buttons[3].getColorValue() == "RED" &&
+                                            buttons[5].getColorValue() == "RED" &&
+                                            buttons[6].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[5].getPosX()) {
+                                        if (buttons[2].getColorValue() == "RED" &&
+                                            buttons[3].getColorValue() == "RED" &&
+                                            buttons[6].getColorValue() == "RED" &&
+                                            buttons[7].getColorValue() == "RED" &&
+                                            buttons[4].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[6].getPosX()) {
+                                        if (buttons[5].getColorValue() == "RED" &&
+                                            buttons[4].getColorValue() == "RED" &&
+                                            buttons[7].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+                                    if (units[l].getPosX() == buttons[7].getPosX()) {
+                                        if (buttons[5].getColorValue() == "RED" &&
+                                            buttons[6].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+
+                                    }
+
+                                    if (units[l].getPosX() == buttons[8].getPosX()) {
+                                        if (buttons[0].getColorValue() == "RED" &&
+                                            buttons[1].getColorValue() == "RED" &&
+                                            buttons[9].getColorValue() == "RED" &&
+                                            buttons[10].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[9].getPosX()) {
+                                        if (buttons[0].getColorValue() == "RED" &&
+                                            buttons[1].getColorValue() == "RED" &&
+                                            buttons[8].getColorValue() == "RED" &&
+                                            buttons[10].getColorValue() == "RED" &&
+                                            buttons[11].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[10].getPosX()) {
+                                        if (buttons[8].getColorValue() == "RED" &&
+                                            buttons[9].getColorValue() == "RED" &&
+                                            buttons[12].getColorValue() == "RED" &&
+                                            buttons[13].getColorValue() == "RED" &&
+                                            buttons[11].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[11].getPosX()) {
+                                        if (buttons[10].getColorValue() == "RED" &&
+                                            buttons[13].getColorValue() == "RED" &&
+                                            buttons[9].getColorValue() == "RED" &&
+                                            buttons[14].getColorValue() == "RED" &&
+                                            buttons[15].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[12].getPosX()) {
+                                        if (buttons[10].getColorValue() == "RED" &&
+                                            buttons[13].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[13].getPosX()) {
+                                        if (buttons[12].getColorValue() == "RED" &&
+                                            buttons[10].getColorValue() == "RED" &&
+                                            buttons[11].getColorValue() == "RED" &&
+                                            buttons[14].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[14].getPosX()) {
+                                        if (buttons[11].getColorValue() == "RED" &&
+                                            buttons[13].getColorValue() == "RED" &&
+                                            buttons[15].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (units[l].getPosX() == buttons[15].getPosX()) {
+                                        if (buttons[14].getColorValue() == "RED" &&
+                                            buttons[11].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                            numberActiveBlue -= 1;
+                                        } else {
+                                            if (units[l].getPosX() != buttons[0].getPosX()) {
+                                                units[l].setPosX(buttons[l - 1].getPosX());
+                                                units[l].setPosY(buttons[l - 1].getPosY() + 10);
+                                            } else {
+                                                units[l].setPosX(buttons[l + 1].getPosX());
+                                                units[l].setPosY(buttons[l + 1].getPosY() + 10);
+                                            }
+
+                                        }
+                                    }
+
+
 
                                     /*else if(buttons[7].getColorValue() == "BLUE")
                                     {
@@ -289,8 +630,7 @@ void Update()
                                     break;
                                 }
 
-                                if(mainDice.getDiceValue() != 6 || mainDice.getDiceValue() != 1)
-                                {
+                                if (mainDice.getDiceValue() != 6 || mainDice.getDiceValue() != 1) {
 
 
                                     std::cout << "LOST";
@@ -315,111 +655,102 @@ void Update()
                             }
                         }
 
-                        if(turn)
-                        {
+                        if (turn) {
                             units[i].moveUnit(buttons[j]);
                             units[i].setSelected(false);
                             buttons[j].setPressed(false);
-                            turn = false;
+                            if (numberActiveBlue >= 0)
+                                turn = false;
                         }
 
 
                     }
 
-                    if(units[i].getSide() == "BLUE" && turn == 0 && buttons[j].getPosX() != units[i].getPosX())
-                    {
-                        for(int l = 0; l < 4; l++)
-                        {
-                            if(buttons[j].getPosX() == units[l].getPosX() )
-                            {
+                    if (units[i].getSide() == "BLUE" && turn == 0 && buttons[j].getPosX() != units[i].getPosX()) {
+                        int curPosX = units[i].getPosX(), curPosY = units[i].getPosY();
+                        for (int l = 0; l < 4; l++) {
+                            if (buttons[j].getPosX() == units[l].getPosX()) {
                                 mainDice.roll();
 
-                                if(mainDice.getDiceValue() == 1 || mainDice.getDiceValue() == 6)
-                                {
+                                if (mainDice.getDiceValue() == 1 || mainDice.getDiceValue() == 6) {
                                     std::cout << mainDice.getDiceValue();
                                     units[i].moveUnit(buttons[j]);
                                     units[i].setSelected(false);
                                     buttons[j].setPressed(false);
                                     turn = true;
 
-                                    if(buttons[15].getColorValue() == "RED")
-                                    {
-                                        units[l].setPosX(buttons[15].getPosX());
-                                        units[l].setPosY(buttons[15].getPosY()+10);
+
+                                    if (units[l].getPosX() == buttons[0].getPosX()) {
+                                        if (buttons[1].getColorValue() == "BLUE" &&
+                                            buttons[8].getColorValue() == "BLUE" &&
+                                            buttons[9].getColorValue() == "BLUE",
+                                                buttons[2].getColorValue() == "BLUE" &&
+                                                buttons[3].getColorValue() == "BLUE") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                        }
                                     }
 
+                                    if (units[l].getPosX() == buttons[1].getPosX()) {
+                                        if (buttons[0].getColorValue() == "RED" &&
+                                            buttons[3].getColorValue() == "RED" &&
+                                            buttons[4].getColorValue() == "RED" &&
+                                            buttons[9].getColorValue() == "RED" &&
+                                            buttons[8].getColorValue() == "RED") {
+                                            units[l].setInteractible(false);
+                                            units[l].setPosX(43432);
+                                            units[l].setPosY(32323);
+                                        }
+                                    }
+
+                                    /*if(units[i].battle(units[l], mainDice))
+                                    {
+                                        std::cout << mainDice.getDiceValue();
+                                        units[i].moveUnit(buttons[j]);
+                                        units[i].setSelected(false);
+                                        buttons[j].setPressed(false);
+                                        turn = true;
+                                    }*/
                                 }
-
-                                if(mainDice.getDiceValue() != 6 || mainDice.getDiceValue() != 1)
-                                {
-                                    std::cout << "LOST";
-                                    units[i].setPosX(curPosX);
-                                    units[i].setPosY(curPosY);
-                                    turn = true;
-                                    units[i].setSelected(false);
-                                    buttons[j].setPressed(false);
-
-                                }
-
-                                /*if(units[i].battle(units[l], mainDice))
-                                {
-                                    std::cout << mainDice.getDiceValue();
-                                    units[i].moveUnit(buttons[j]);
-                                    units[i].setSelected(false);
-                                    buttons[j].setPressed(false);
-                                    turn = true;
-                                }*/
                             }
+
+                            if (!turn) {
+                                units[i].moveUnit(buttons[j]);
+                                units[i].setSelected(false);
+                                buttons[j].setPressed(false);
+                                turn = true;
+                            }
+
                         }
 
-                        if(!turn)
+
+
+                        /*else
                         {
-                            units[i].moveUnit(buttons[j]);
                             units[i].setSelected(false);
                             buttons[j].setPressed(false);
-                            turn = true;
-                        }
-
-                    }
+                        }*/
 
 
 
-                    else
-                    {
-                        units[i].setSelected(false);
+                    } else {
+                        //units[i].setSelected(false);
                         buttons[j].setPressed(false);
                     }
 
 
-
                 }
-
-                else
-                {
-                    //units[i].setSelected(false);
-                    buttons[j].setPressed(false);
-                }
-
-
-
-
             }
+
+
         }
-
-
     }
-
-
-
-
-
 }
 
-int main()
+int main(void)
 {
-
     SetupButtons();
-
 
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Nambuk");
@@ -434,29 +765,26 @@ int main()
                          LoadTexture("D:/CPP Projects/Nambuk/assets/Dice6.png")};
 
 
-    while (!WindowShouldClose())
-    {
+    while (!WindowShouldClose()) {
         Update();
 
         DrawTexture(background, 0, 0, WHITE);
-        DrawTexture(map, (SCREEN_WIDTH/2)-(312/2), (SCREEN_HEIGHT/2)-(495/2), WHITE);
-        DrawTexture(dice[mainDice.getDiceValue()-1], 50, 580, WHITE);
+        DrawTexture(map, (SCREEN_WIDTH / 2) - (312 / 2), (SCREEN_HEIGHT / 2) - (495 / 2), WHITE);
+        DrawTexture(dice[mainDice.getDiceValue() - 1], 50, 580, WHITE);
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        DrawText(turnText, (SCREEN_WIDTH/2)-220, 50, 50, BLACK);
+        DrawText(turnText, (SCREEN_WIDTH / 2) - 220, 50, 50, BLACK);
 
 
         //Drawing buttons
-        for(int i = 0; i < 16; i++)
-        {
+        for (int i = 0; i < 16; i++) {
 
             DrawCircle(buttons[i].getPosX(), buttons[i].getPosY(), 10, buttons[i].getColour());
 
         }
 
-        for(int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             DrawCircle(units[i].getPosX(), units[i].getPosY(), 11, units[i].getColour());
 
         }
@@ -465,9 +793,14 @@ int main()
     }
 
 
-
     UnloadTexture(background);
     CloseWindow();
 
     return 0;
 }
+
+
+
+
+
+
