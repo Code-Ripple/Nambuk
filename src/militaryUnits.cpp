@@ -625,6 +625,258 @@ void militaryUnit::moveUnit(button location) {
         }
     }
 
+    if(getProvinceNumber() == 12)
+    {
+        if(location.getProvinceNumber() == 10 || location.getProvinceNumber() == 11 || location.getProvinceNumber() == 14 || location.getProvinceNumber() == 15 || location.getProvinceNumber() == 16)
+        {
+            std::cout << location.getColorValue() << std::endl;
+            setPosX(location.getPosX());
+            setPosY(location.getPosY() + 10);
+
+
+            std::cout << "side: " << side << std::endl;
+            /*if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "BLUE") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(BLUE);
+            }
+
+            if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "RED") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(RED);
+            }*/
+
+            if(location.getColorValue() == "BLUE" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "RED" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            if(location.getColorValue() == "RED" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "BLUE" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            location.setPressed(false);
+            std::cout << location.getColorValue();
+            selected = false;
+        }
+    }
+
+    if(getProvinceNumber() == 13)
+    {
+        if(location.getProvinceNumber() == 14 || location.getProvinceNumber() == 11)
+        {
+            std::cout << location.getColorValue() << std::endl;
+            setPosX(location.getPosX());
+            setPosY(location.getPosY() + 10);
+
+
+            std::cout << "side: " << side << std::endl;
+            /*if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "BLUE") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(BLUE);
+            }
+
+            if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "RED") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(RED);
+            }*/
+
+            if(location.getColorValue() == "BLUE" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "RED" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            if(location.getColorValue() == "RED" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "BLUE" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            location.setPressed(false);
+            std::cout << location.getColorValue();
+            selected = false;
+        }
+    }
+
+    if(getProvinceNumber() == 14)
+    {
+        if(location.getProvinceNumber() == 13 || location.getProvinceNumber() == 11 || location.getProvinceNumber() == 12 || location.getProvinceNumber() == 15)
+        {
+            std::cout << location.getColorValue() << std::endl;
+            setPosX(location.getPosX());
+            setPosY(location.getPosY() + 10);
+
+
+            std::cout << "side: " << side << std::endl;
+            /*if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "BLUE") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(BLUE);
+            }
+
+            if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "RED") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(RED);
+            }*/
+
+            if(location.getColorValue() == "BLUE" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "RED" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            if(location.getColorValue() == "RED" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "BLUE" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            location.setPressed(false);
+            std::cout << location.getColorValue();
+            selected = false;
+        }
+    }
+
+    if(getProvinceNumber() == 15)
+    {
+        if(location.getProvinceNumber() == 12 || location.getProvinceNumber() == 14 || location.getProvinceNumber() == 16)
+        {
+            std::cout << location.getColorValue() << std::endl;
+            setPosX(location.getPosX());
+            setPosY(location.getPosY() + 10);
+
+
+            std::cout << "side: " << side << std::endl;
+            /*if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "BLUE") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(BLUE);
+            }
+
+            if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "RED") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(RED);
+            }*/
+
+            if(location.getColorValue() == "BLUE" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "RED" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            if(location.getColorValue() == "RED" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "BLUE" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            location.setPressed(false);
+            std::cout << location.getColorValue();
+            selected = false;
+        }
+    }
+
+    if(getProvinceNumber() == 16)
+    {
+        if(location.getProvinceNumber() == 12 || location.getProvinceNumber() == 15)
+        {
+            std::cout << location.getColorValue() << std::endl;
+            setPosX(location.getPosX());
+            setPosY(location.getPosY() + 10);
+
+
+            std::cout << "side: " << side << std::endl;
+            /*if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "BLUE") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(BLUE);
+            }
+
+            if(std::strcmp(GET_VARIABLE_NAME(location.getColour()), "RED") != 0 && std::strcmp(side, "BLUE") == 0)
+            {
+                location.setColour(RED);
+            }*/
+
+            if(location.getColorValue() == "BLUE" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "RED" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            if(location.getColorValue() == "RED" && side == "RED")
+            {
+                location.setColour(RED);
+                location.setColourValue("RED");
+            }
+
+            if(location.getColorValue() == "BLUE" && side == "BLUE")
+            {
+                location.setColour(BLUE);
+                location.setColourValue("BLUE");
+            }
+
+            location.setPressed(false);
+            std::cout << location.getColorValue();
+            selected = false;
+        }
+    }
+
+
+
 
 
     else
