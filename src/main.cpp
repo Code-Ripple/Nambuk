@@ -145,6 +145,10 @@ void SetupButtons()
 
 void Update()
 {
+
+
+
+    int numberActiveBlue = 2, numberActiveRed = 2;
     //std::cout << mainDice.getDiceValue() << std::endl;
 
     if(turn)
@@ -155,6 +159,8 @@ void Update()
         }
     }
 
+
+
     else
     {
         for(int i = 0; i < 19; i++)
@@ -164,10 +170,27 @@ void Update()
     }
 
 
+    if(numberActiveRed == 0)
+    {
+         turn = false;
+    }
 
+
+    if(numberActiveBlue == 0)
+    {
+         turn = true;
+    }
 
     for(int i = 0; i < 4; i++)
     {
+
+        if(!units[i].getInteractible())
+        {
+            if(units[i].getSide() == "RED")
+                numberActiveRed -= 1;
+            if(units[i].getSide == "BLUE")
+                numberActiveBlue -= 1;
+        }
         for(int j = 0; j < 16; j++)
         {
 
