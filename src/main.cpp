@@ -248,6 +248,7 @@ void Update() {
 
     for (int i = 0; i < 4; i++) {
         units[i].Update();
+
         //std::cout << "Unit selected: " << units[i].unitSelected() << std::endl;
 
         if (units[i].unitSelected() == 1) {
@@ -258,9 +259,10 @@ void Update() {
 
 
                     if (units[i].getSide() == "RED" && turn == 1 && buttons[j].getPosX() != units[i].getPosX()) {
-                        int curPosX = units[i].getPosX(), curPosY = units[i].getPosY();
+                        //int curPosX = units[i].getPosX(), curPosY = units[i].getPosY();
                         for (int l = 0; l < 4; l++) {
-                            int curPosXl = units[l].getPosX(), curPosYl = units[l].getPosY();
+
+                            //int curPosXl = units[l].getPosX(), curPosYl = units[l].getPosY();
 
                             if (buttons[j].getPosX() == units[l].getPosX()) {
                                 mainDice.roll();
@@ -634,8 +636,10 @@ void Update() {
 
 
                                     std::cout << "LOST";
-                                    units[i].setPosX(curPosX);
-                                    units[i].setPosY(curPosY);
+                                    //units[i].setPosX(curPosXl);
+
+
+                                    //units[i].setPosY(curPosYl);
                                     turn = false;
                                     units[i].setSelected(false);
                                     buttons[j].setPressed(false);
@@ -755,14 +759,14 @@ int main(void)
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Nambuk");
     SetTargetFPS(60);
-    Texture2D background = LoadTexture("D:/CPP Projects/Nambuk/assets/background.png");
-    Texture2D map = LoadTexture("D:/CPP Projects/Nambuk/assets/Map.png");
-    Texture2D dice[6] = {LoadTexture("D:/CPP Projects/Nambuk/assets/Dice1.png"),
-                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice2.png"),
-                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice3.png"),
-                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice4.png"),
-                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice5.png"),
-                         LoadTexture("D:/CPP Projects/Nambuk/assets/Dice6.png")};
+    Texture2D background = LoadTexture(ASSETS_PATH"background.png");
+    Texture2D map = LoadTexture(ASSETS_PATH"Map.png");
+    Texture2D dice[6] = {LoadTexture(ASSETS_PATH"Dice1.png"),
+                         LoadTexture(ASSETS_PATH"Dice2.png"),
+                         LoadTexture(ASSETS_PATH"Dice3.png"),
+                         LoadTexture(ASSETS_PATH"Dice4.png"),
+                         LoadTexture(ASSETS_PATH"Dice5.png"),
+                         LoadTexture(ASSETS_PATH"Dice6.png")};
 
 
     while (!WindowShouldClose()) {

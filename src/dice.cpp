@@ -6,5 +6,5 @@ int dice::getDiceValue() {
 }
 
 void dice::roll() {
-    value = GetRandomValue(6, 6);
+    value = GetRandomValue(6, 6); //supposed to be 1 and 6, I am just doing this for testing purposes
 }
